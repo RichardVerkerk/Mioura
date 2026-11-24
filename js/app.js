@@ -72,7 +72,42 @@ function dashboard() {
         ).toFixed(1)
       : "—",
     name = d.onboarding.userName;
-  return `<section class="hero"><span class="eyebrow">Jouw persoonlijke migrainejournaal</span><h1>${name ? "Fijn je te zien, " + esc(name) : "Welkom bij Mioura"}.</h1><p>Neem even de tijd om te noteren hoe het met je gaat. Kleine registraties geven later meer inzicht.</p><button class="btn" data-go="register">＋ Migraine registreren</button></section><div class="grid"><div class="card"><div class="stat-label">Aanvallen deze maand</div><div class="stat-value">${monthly.length}</div><div class="stat-foot">Deze kalendermaand</div></div><div class="card"><div class="stat-label">Migrainedagen</div><div class="stat-value">${days}</div><div class="stat-foot">Unieke dagen met aanval</div></div><div class="card"><div class="stat-label">Gemiddelde pijn</div><div class="stat-value">${avg}</div><div class="stat-foot">Schaal van 0–10</div></div><div class="card"><div class="stat-label">Totaal geregistreerd</div><div class="stat-value">${att.length}</div><div class="stat-foot">Aanvallen in je dagboek</div></div></div><div class="section-head"><h2>Recente aanvallen</h2><button class="text-link" data-go="calendar">Bekijk kalender</button></div>${
+  return `<section class="hero">
+  <span class="eyebrow">Jouw persoonlijke migrainejournaal</span>
+  <h1>${name ? "Fijn je te zien, " + esc(name) : "Welkom bij Mioura"}.</h1>
+  <p>Neem even de tijd om te noteren hoe het met je gaat. Kleine registraties geven later meer inzicht.</p>
+  <button class="btn coral" data-go="register">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-lightning preview-icon"><path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/></svg>
+  Migraine registreren</button>
+  </section>
+  <div class="grid grid-dashboard">
+    <div class="card dashboard-stats-card">
+      <div class="dashboard-card-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-1 preview-icon"><path d="M11 13h1v4"/><path d="M16 2v3"/><path d="M3 9h18"/><path d="M8 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+      </div>
+      <div class="stat-value">${monthly.length}</div>
+      <div class="stat-label">Aanvallen deze maand</div>
+      </div>
+    <div class="card dashboard-stats-card">
+      <div class="dashboard-card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap preview-icon"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg>
+      </div>
+      <div class="stat-value">${days}</div>
+      <div class="stat-label">Migrainedagen deze maand</div>
+    </div>
+    <div class="card dashboard-stats-card">
+      <div class="dashboard-card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge preview-icon"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+      </div>
+      <div class="stat-value">${avg}</div>
+      <div class="stat-label">Gemiddelde  pijnintensiteit</div>
+
+    </div>
+  </div>
+  <div class="section-head">
+    <h2>Recente aanvallen</h2>
+    <button class="text-link" data-go="calendar">Bekijk kalender</button>
+  </div>${
     att.length
       ? att
           .slice()
@@ -80,11 +115,17 @@ function dashboard() {
           .slice(0, 3)
           .map(
             (a) =>
-              `<div class="card row"><div><div class="item-title">${new Date(a.date + "T12:00:00").toLocaleDateString("nl-NL", { day: "numeric", month: "long" })} · ${a.time}</div><div class="muted">${(a.symptoms || []).slice(0, 3).join(" · ") || "Geen symptomen ingevuld"}</div></div><span class="pill">Pijn ${a.pain}/10</span></div>`,
+              `<div class="card row"><div><div class="item-title">${new Date(a.date + "T12:00:00").toLocaleDateString("nl-NL", { day: "numeric", month: "long" })} · ${a.time}</div><div class="muted">${(a.symptoms || []).slice(0, 3).join(" · ") || "Geen symptomen ingevuld"}</div></div><span class="pill ${
+                a.pain <= 3
+                  ? "pain-low"
+                  : a.pain <= 7
+                    ? "pain-medium"
+                    : "pain-high"
+              }">${a.pain}/10</span></div>`,
           )
           .join("")
       : `<div class="empty"><strong>Je dagboek is nog leeg</strong>Zodra je een aanval registreert, verschijnt deze hier.</div>`
-  }<div class="section-head"><h2>Dagelijkse medicatie</h2><button class="text-link" data-go="medication">Beheren</button></div>${d.dailyMedication.current ? `<div class="card row"><div><strong>${esc(d.dailyMedication.current.name)}</strong><div class="muted">${esc(d.dailyMedication.current.dose || "Dosering niet ingevuld")}</div></div><span class="pill">Actief</span></div>` : `<div class="card muted">Geen dagelijkse medicatie ingesteld.</div>`}<div class="section-head"><h2>Een zachte herinnering</h2></div><div class="card" style="background:#F2EAFB">Je hoeft niet alles in te vullen. Noteer alleen wat op dit moment voor jou belangrijk is.</div>`;
+  }<div class="section-head"><h2>Dagelijkse medicatie</h2><button class="text-link" data-go="medication">Beheren</button></div>${d.dailyMedication.current ? `<div class="card row"><div><strong>${esc(d.dailyMedication.current.name)}</strong><div class="muted">${esc(d.dailyMedication.current.dose || "Dosering niet ingevuld")}</div></div><span class="pill">Actief</span></div>` : `<div class="card muted">Geen dagelijkse medicatie ingesteld.</div>`}<div class="section-head"><h2>Een zachte herinnering</h2></div><div class="card">Je hoeft niet alles in te vullen. Noteer alleen wat op dit moment voor jou belangrijk is.</div>`;
 }
 function bindDashboard() {
   document
