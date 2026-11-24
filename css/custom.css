@@ -19,10 +19,12 @@
 * {
     box-sizing: border-box;
 }
+
 html {
     width: 100%;
     min-height: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
 
     background: linear-gradient(
         135deg,
@@ -31,26 +33,32 @@ html {
         var(--lilac2) 75%,
         rgba(242, 141, 145, 0.25) 100%
     );
+
     background-attachment: fixed;
 }
+
 body {
     width: 100%;
+    min-width: 0;
     min-height: 100vh;
     min-height: 100dvh;
     margin: 0;
-    overflow-x: hidden;
-    box-sizing: border-box;
 
-    margin: 0;
     color: var(--lilac7);
     font-family: "DM Sans", sans-serif;
     font-size: 15px;
+
+    overflow-x: clip;
 }
 .app-shell {
+    width: 100%;
     max-width: 760px;
-    margin: auto;
+    min-width: 0;
+    margin: 0 auto;
+    min-height: 100vh;
     min-height: 100dvh;
-    padding-bottom: 92px;
+    padding: 0 16px 120px;
+    overflow-x: clip;
 }
 .topbar {
     position: sticky;
