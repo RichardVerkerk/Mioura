@@ -2,6 +2,11 @@
 :root {
     --lilac: #e8d9ff;
     --lilac2: #cdb8ed;
+    --lilac3: #b69bdc;
+    --lilac4: #9675c2;
+    --lilac5: #76549f;
+    --lilac6: #573b7a;
+    --lilac7: #3d2859;
     --coral: #f28d91;
     --ochre: #d9a34a;
     --ink: #080808;
@@ -26,7 +31,7 @@ html {
 }
 body {
     margin: 0;
-    color: var(--ink);
+    color: var(--lilac7);
     font-family: "DM Sans", sans-serif;
     font-size: 15px;
 }
@@ -56,7 +61,7 @@ body {
     align-items: center;
     gap: 10px;
     text-decoration: none;
-    color: var(--ink);
+    color: var(--lilac6);
     font-size: 22px;
     font-weight: 700;
     letter-spacing: -1px;
@@ -67,7 +72,7 @@ body {
     width: 34px;
     height: 34px;
     border-radius: 12px;
-    background: var(--ink);
+    background: var(--lilac7);
     color: white;
     font-family: "Playfair Display";
     font-size: 25px;
@@ -121,6 +126,7 @@ body {
         500 30px/1.15 "Playfair Display",
         serif;
     margin: 8px 0;
+    color: var(--lilac7);
 }
 .hero p {
     max-width: 270px;
@@ -132,7 +138,7 @@ body {
     border: 0;
     border-radius: 15px;
     padding: 14px 18px;
-    background: var(--ink);
+    background: var(--lilac7);
     color: white;
     font: 600 14px "DM Sans";
     cursor: pointer;
@@ -204,11 +210,12 @@ body {
 }
 
 .stat-label {
-    color: var(--muted);
+    color: var(--lilac6);
     font-size: 12px;
 }
 .stat-value {
     font: 500 3em "Playfair Display";
+    color: var(--lilac6);
     margin: -15px 0 0 0;
 }
 .stat-foot {
@@ -284,10 +291,22 @@ body {
     padding: 24px;
     text-align: center;
     color: var(--muted);
-    background: #fff;
     border: 1px dashed #d9cde5;
     border-radius: 20px;
     line-height: 1.5;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.55),
+        rgba(245, 238, 250, 0.35)
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-radius: 21px;
+    padding: 17px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
 }
 .empty strong {
     display: block;
@@ -360,24 +379,25 @@ body {
 .bottom-nav {
     position: fixed;
     z-index: 10;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
     max-width: 760px;
     margin: auto;
     display: flex;
     justify-content: space-around;
     gap: 2px;
     backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.4);
-    border-top: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(232, 217, 255, 0.5);
+    border: 1px solid var(--line);
     padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
-    backdrop-filter: blur(10px);
+    border-radius: 22px;
 }
 .nav-item {
     border: 0;
     background: none;
-    color: var(--muted);
+    color: var(--lilac6);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -395,7 +415,7 @@ body {
     font-size: 9px;
 }
 .nav-item.active {
-    color: #151019;
+    color: var(--lilac7);
     font-weight: 700;
 }
 .nav-item.active span {
