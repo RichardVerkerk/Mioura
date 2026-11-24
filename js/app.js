@@ -106,7 +106,7 @@ function dashboard() {
   </div>
   <div class="section-head">
     <h2>Recente aanvallen</h2>
-    <button class="text-link" data-go="calendar">Bekijk kalender</button>
+    <button class="text-link" data-go="calendar">Bekijk kalender <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right preview-icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
   </div>${
     att.length
       ? att
@@ -125,7 +125,7 @@ function dashboard() {
           )
           .join("")
       : `<div class="empty"><strong>Je dagboek is nog leeg</strong>Zodra je een aanval registreert, verschijnt deze hier.</div>`
-  }<div class="section-head"><h2>Dagelijkse medicatie</h2><button class="text-link" data-go="medication">Beheren</button></div>${d.dailyMedication.current ? `<div class="card row"><div><strong>${esc(d.dailyMedication.current.name)}</strong><div class="muted">${esc(d.dailyMedication.current.dose || "Dosering niet ingevuld")}</div></div><span class="pill">Actief</span></div>` : `<div class="card muted">Geen dagelijkse medicatie ingesteld.</div>`}<div class="section-head"><h2>Een zachte herinnering</h2></div><div class="card">Je hoeft niet alles in te vullen. Noteer alleen wat op dit moment voor jou belangrijk is.</div>`;
+  }<div class="section-head"><h2>Dagelijkse medicatie</h2><button class="text-link" data-go="medication">Beheren <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right preview-icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button></div>${d.dailyMedication.current ? `<div class="card row"><div><strong>${esc(d.dailyMedication.current.name)}</strong><div class="muted">${esc(d.dailyMedication.current.dose || "Dosering niet ingevuld")}</div></div><span class="pill">Actief</span></div>` : `<div class="card muted">Geen dagelijkse medicatie ingesteld.</div>`}<div class="section-head"><h2>Een zachte herinnering</h2></div><div class="card">Je hoeft niet alles in te vullen. Noteer alleen wat op dit moment voor jou belangrijk is.</div>`;
 }
 function bindDashboard() {
   document
