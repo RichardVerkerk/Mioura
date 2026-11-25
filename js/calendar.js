@@ -31,7 +31,13 @@ window.MiouraCalendar = {
       if (this.selected === iso) cls += " selected";
       cells += `<button class="cal-day ${cls}" data-day="${iso}">${dt.getDate()}</button>`;
     }
-    return `<div class="eyebrow">Jouw geschiedenis</div><h1 class="page-title">Kalender</h1><p class="subtitle">Bekijk je migraineaanvallen per dag.</p><div class="card"><div class="row"><button class="text-link" id="prev-month">←</button><h2 style="font:500 21px 'Playfair Display'">${new Date(this.year, this.month, 1).toLocaleDateString("nl-NL", { month: "long", year: "numeric" })}</h2><button class="text-link" id="next-month">→</button></div><div class="calendar-grid">${["ma", "di", "wo", "do", "vr", "za", "zo"].map((x) => `<div class="cal-head">${x}</div>`).join("")}${cells}</div><div class="muted" style="margin-top:12px">Lila = aanval · Koraal = hoge pijnintensiteit</div></div><div id="day-detail"></div>`;
+    return `
+    <section class="hero">
+    <span class="eyebrow">Jouw geschiedenis</span>
+    <h1>Kalender</h1>
+    <p>Bekijk je migraineaanvallen per dag.</p>
+    </section>
+    <div class="card"><div class="row"><button class="text-link" id="prev-month">←</button><h2 style="font:500 21px 'Playfair Display'">${new Date(this.year, this.month, 1).toLocaleDateString("nl-NL", { month: "long", year: "numeric" })}</h2><button class="text-link" id="next-month">→</button></div><div class="calendar-grid">${["ma", "di", "wo", "do", "vr", "za", "zo"].map((x) => `<div class="cal-head">${x}</div>`).join("")}${cells}</div><div class="muted" style="margin-top:12px">Lila = aanval · Koraal = hoge pijnintensiteit</div></div><div id="day-detail"></div>`;
   },
   bind() {
     document.getElementById("prev-month").onclick = () => {

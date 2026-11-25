@@ -171,7 +171,7 @@ body {
 .hero p {
     max-width: 100%;
     color: #51465e;
-    margin: 0 0 18px;
+    margin: 0 0 0;
     line-height: 1.45;
 }
 .hero-button {
@@ -206,6 +206,24 @@ body {
 
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
     cursor: pointer;
+}
+
+.medication-taken-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    text-align: left;
+}
+
+.medication-taken-message > span {
+    color: #4d9670;
+    font-size: 22px;
+}
+
+.medication-taken-message strong {
+    display: block;
 }
 
 .btn {
@@ -245,8 +263,12 @@ body {
     gap: 12px;
 }
 
-.grid-dashboard {
+.grid-dashboard-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-dashboard-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .grid-analytics {
@@ -690,7 +712,7 @@ body {
     width: 46px;
     height: 26px;
     appearance: none;
-    background: #ddd;
+    background: var(--lilac4);
     border-radius: 99px;
     position: relative;
     cursor: pointer;

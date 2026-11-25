@@ -7,9 +7,20 @@ window.MiouraOnboarding = (() => {
   const hideNav = () => {
     const nav = document.querySelector(".bottom-nav");
     if (nav) nav.style.display = "none";
+
+    const quickAdd = document.querySelector(".quick-add-button");
+    if (quickAdd) quickAdd.style.display = "none";
   };
 
   const showNav = () => {
+    const nav = document.querySelector(".bottom-nav");
+    if (nav) nav.style.display = "flex";
+
+    const quickAdd = document.querySelector(".quick-add-button");
+    if (quickAdd) quickAdd.style.display = "";
+  };
+
+  const showQuickAddButton = () => {
     const nav = document.querySelector(".bottom-nav");
     if (nav) nav.style.display = "flex";
   };
