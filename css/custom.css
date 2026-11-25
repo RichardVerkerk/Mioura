@@ -229,8 +229,8 @@ body {
     color: var(--ink);
 }
 .btn.ghost {
-    background: var(--coral9);
-    color: var(--coral2);
+    background: white;
+    color: var(--ink);
     border: 1px solid var(--line);
 }
 .btn.full {
