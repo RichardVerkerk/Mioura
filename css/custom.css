@@ -609,6 +609,15 @@ body {
 .cal-day.out {
     opacity: 0.35;
 }
+.cal-day,
+.cal-day:visited,
+.cal-day:hover,
+.cal-day:focus,
+.cal-day:active {
+    color: var(--ink) !important;
+    -webkit-text-fill-color: var(--ink) !important;
+    text-decoration: none;
+}
 .bar {
     height: 9px;
     border-radius: 9px;
