@@ -66,7 +66,8 @@ body {
     margin: 0 auto;
     min-height: 100vh;
     min-height: 100dvh;
-    padding: 0 0 60px;
+    padding: 0 0 calc(100px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
     overflow-x: clip;
 }
 .topbar {
@@ -514,7 +515,7 @@ body {
 .bottom-nav {
     position: fixed;
     z-index: 10;
-    bottom: calc(10px + env(safe-area-inset-bottom));
+    bottom: 4px;
     left: 10px;
     right: 10px;
     max-width: 760px;
@@ -530,7 +531,7 @@ body {
     background: rgba(232, 217, 255, 0.5);
 
     border: 1px solid var(--line);
-    padding: 9px 4px;
+    padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
     border-radius: 22px;
 }
 .nav-item {
