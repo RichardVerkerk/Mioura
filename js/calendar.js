@@ -1,7 +1,11 @@
 window.MiouraCalendar = {
   month: new Date().getMonth(),
   year: new Date().getFullYear(),
-  selected: today(),
+  selected: (() => {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 10);
+  })(),
   render() {
     const first = new Date(this.year, this.month, 1),
       start = (first.getDay() + 6) % 7,
