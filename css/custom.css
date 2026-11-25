@@ -515,11 +515,12 @@ body {
 .bottom-nav {
     position: fixed;
     z-index: 10;
-    bottom: 4px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
     left: 10px;
     right: 10px;
     max-width: 760px;
     margin: auto;
+    box-sizing: border-box;
 
     display: flex;
     justify-content: space-around;
@@ -531,7 +532,7 @@ body {
     background: rgba(232, 217, 255, 0.5);
 
     border: 1px solid var(--line);
-    padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
+    padding: 9px 4px;
     border-radius: 22px;
 }
 .nav-item {
@@ -566,6 +567,7 @@ body {
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
 }
+
 .cal-day,
 .cal-head {
     display: grid;
@@ -573,26 +575,37 @@ body {
     min-height: 39px;
     font-size: 12px;
 }
+
 .cal-head {
     color: var(--muted);
     font-size: 10px;
 }
+
 .cal-day {
-    background: white;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+
+    background-color: #fff;
+    color: var(--ink);
     border-radius: 11px;
     cursor: pointer;
     border: 1px solid transparent;
 }
+
 .cal-day.has-attack {
-    background: var(--lilac);
+    background-color: var(--lilac);
 }
+
 .cal-day.severe {
-    background: var(--coral);
+    background-color: var(--coral);
 }
+
 .cal-day.selected {
     border: 2px solid var(--ink);
     font-weight: 700;
 }
+
 .cal-day.out {
     opacity: 0.35;
 }
