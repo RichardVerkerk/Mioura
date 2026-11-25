@@ -413,7 +413,7 @@ window.MiouraOnboarding = (() => {
     d.onboarding.completedAt = new Date().toISOString();
 
     if (!MiouraStore.save()) return;
-
+    updateHeaderLock();
     showNav();
     renderPage("dashboard");
     window.scrollTo(0, 0);
@@ -433,12 +433,6 @@ window.MiouraOnboarding = (() => {
       hideNav();
       renderStep();
       return true;
-    },
-    restart() {
-      draft = readDraft();
-      step = 1;
-      hideNav();
-      renderStep();
     },
   };
 })();

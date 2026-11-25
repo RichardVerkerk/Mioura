@@ -7,7 +7,16 @@
     --lilac5: #76549f;
     --lilac6: #573b7a;
     --lilac7: #3d2859;
+    --coral1: #fff1f1;
+    --coral2: #ffe1e2;
+    --coral3: #ffc9cb;
+    --coral4: #f9aaad;
     --coral: #f28d91;
+    --coral5: #e9787e;
+    --coral6: #d95f67;
+    --coral7: #bd4852;
+    --coral8: #983943;
+    --coral9: #762f37;
     --ochre: #d9a34a;
     --ink: #080808;
     --paper: #f8f5fc;
@@ -511,8 +520,8 @@ body {
     background: #17101e66;
     z-index: 30;
     display: grid;
-    place-items: end center;
-    padding: 12px;
+    place-items: center;
+    padding: 16px;
 }
 .modal {
     background: var(--paper);
@@ -529,13 +538,14 @@ body {
 .toast {
     position: fixed;
     bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
     background: #17121d;
     color: white;
-    border-radius: 99px;
     padding: 11px 17px;
     font-size: 13px;
+    text-align: center;
     z-index: 50;
 }
 .hidden {

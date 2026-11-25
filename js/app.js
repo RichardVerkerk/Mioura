@@ -134,7 +134,7 @@ function bindDashboard() {
 }
 function settings() {
   const d = MiouraStore.get();
-  return `<div class="eyebrow">Jouw voorkeuren</div><h1 class="page-title">Instellingen</h1><p class="subtitle">Beheer je profiel en je gegevens.</p><div class="card"><div class="field"><label>Naam</label><input id="setting-name" value="${esc(d.onboarding.userName)}" placeholder="Je naam"></div><button class="btn full" id="save-name">Naam opslaan</button></div><div class="card"><div class="row"><div><strong>Dagelijkse medicatie-inname bijhouden</strong><div class="muted">Schakel registratie van innames in of uit.</div></div><input id="setting-track" type="checkbox" class="toggle" ${d.settings.trackDailyMedicationIntake ? "checked" : ""}></div></div><div class="card"><h2 style="font:500 20px 'Playfair Display'">Back-up en gegevens</h2><p class="muted">Exporteer regelmatig een kopie van je gegevens. Je gegevens blijven op dit apparaat.</p><button class="btn full" id="export-data">Back-up downloaden</button><div class="field"><label>Back-up importeren</label><input id="import-file" type="file" accept="application/json"></div><div class="notice">Mioura bewaart gegevens lokaal in deze browser. LocalStorage is niet versleuteld. Browsergegevens wissen kan je gegevens verwijderen. Er is geen automatische synchronisatie tussen apparaten.</div><button class="btn ghost full" id="reset-onboarding">Onboarding opnieuw starten</button><button class="btn ghost full" id="delete-data" style="margin-top:9px;color:#a43e4d">Alle gegevens verwijderen</button></div><div class="card"><strong>Mioura</strong><div class="muted">Persoonlijk migrainejournaal · versie 1.1.4</div></div>`;
+  return `<div class="eyebrow">Jouw voorkeuren</div><h1 class="page-title">Instellingen</h1><p class="subtitle">Beheer je profiel en je gegevens.</p><div class="card"><div class="field"><label>Naam</label><input id="setting-name" value="${esc(d.onboarding.userName)}" placeholder="Je naam"></div><button class="btn full" id="save-name">Naam opslaan</button></div><div class="card"><div class="row"><div><strong>Dagelijkse medicatie-inname bijhouden</strong><div class="muted">Schakel registratie van innames in of uit.</div></div><input id="setting-track" type="checkbox" class="toggle" ${d.settings.trackDailyMedicationIntake ? "checked" : ""}></div></div><div class="card"><h2 style="font:500 20px 'Playfair Display'">Back-up en gegevens</h2><p class="muted">Exporteer regelmatig een kopie van je gegevens. Je gegevens blijven op dit apparaat.</p><button class="btn full" id="export-data">Back-up downloaden</button><div class="field"><label>Back-up importeren</label><input id="import-file" type="file" accept="application/json"></div><div class="notice">Mioura bewaart gegevens lokaal in deze browser. LocalStorage is niet versleuteld. Browsergegevens wissen kan je gegevens verwijderen. Er is geen automatische synchronisatie tussen apparaten.</div><button class="btn ghost full" id="delete-data" style="margin-top:9px;color:#a43e4d">Alle gegevens verwijderen</button></div><div class="card"><strong>Mioura</strong><div class="muted">Persoonlijk migrainejournaal · versie 1.1.4</div></div>`;
 }
 function bindSettings() {
   document.getElementById("save-name").onclick = () => {
@@ -154,26 +154,48 @@ function bindSettings() {
   document.getElementById("import-file").onchange = (e) => {
     if (e.target.files[0]) MiouraBackup.import(e.target.files[0]);
   };
-  document.getElementById("reset-onboarding").onclick = () => {
-    if (
-      confirm(
-        "De onboarding opnieuw starten? Je bestaande gegevens blijven behouden.",
-      )
-    ) {
-      MiouraStore.get().onboarding.completed = false;
-      MiouraStore.save();
-      MiouraOnboarding.render();
-    }
-  };
+
   document.getElementById("delete-data").onclick = () => {
-    if (
-      confirm(
-        "Weet je zeker dat je ALLE Mioura-gegevens wilt verwijderen? Maak eerst een back-up als je iets wilt bewaren.",
-      )
-    ) {
+    modal(`
+      <span class="eyebrow">Gegevensbeheer</span>
+      <h2 class="page-title">Alle gegevens verwijderen?</h2>
+      <p class="subtitle">
+        Weet je zeker dat je alle Mioura-gegevens wilt verwijderen?
+        Dit omvat je migraineaanvallen, medicatie, innames,
+        instellingen en persoonlijke gegevens.
+      </p>
+
+      <div class="notice" style="margin:16px 0">
+        <strong>Let op:</strong> Deze actie kan niet ongedaan worden gemaakt.
+        Maak eerst een back-up als je je gegevens wilt bewaren.
+      </div>
+
+      <div class="onboarding-navigation">
+        <button class="btn ghost" id="cancel-delete">
+          Annuleren
+        </button>
+        <button class="btn full" id="confirm-delete"
+          style="background:#a43e4d;color:white">
+          Ja, verwijder alles
+        </button>
+      </div>
+    `);
+
+    document.getElementById("cancel-delete").onclick = () => {
+      closeModal();
+    };
+
+    document.getElementById("confirm-delete").onclick = () => {
+      closeModal();
       MiouraStore.reset();
       location.reload();
-    }
+    };
+    document.getElementById("confirm-delete").onclick = () => {
+      closeModal();
+      MiouraStore.reset();
+      toast("Alle gegevens worden verwijderd.");
+      setTimeout(() => location.reload(), 1200);
+    };
   };
 }
 document.addEventListener("click", (e) => {
@@ -184,6 +206,7 @@ document.addEventListener("click", (e) => {
   }
 });
 document.addEventListener("DOMContentLoaded", () => {
+  updateHeaderLock();
   document.getElementById("todayLabel").textContent =
     new Date().toLocaleDateString("nl-NL", {
       weekday: "short",
@@ -195,3 +218,20 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!MiouraStore.get().onboarding.completed) MiouraOnboarding.render();
   else renderPage("dashboard");
 });
+
+function updateHeaderLock() {
+  const brand = document.querySelector(".topbar .brand");
+  if (!brand) return;
+
+  const onboardingIncomplete = !MiouraStore.get().onboarding.completed;
+
+  brand.style.pointerEvents = onboardingIncomplete ? "none" : "auto";
+  brand.style.cursor = onboardingIncomplete ? "default" : "pointer";
+  brand.setAttribute("aria-disabled", onboardingIncomplete ? "true" : "false");
+
+  if (onboardingIncomplete) {
+    brand.removeAttribute("data-page");
+  } else {
+    brand.setAttribute("data-page", "dashboard");
+  }
+}
