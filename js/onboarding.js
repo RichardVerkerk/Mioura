@@ -51,9 +51,7 @@ window.MiouraOnboarding = (() => {
     <button type="button"
       class="onboarding-choice ${selected ? "selected" : ""}"
       id="${id}" aria-pressed="${selected}">
-      <span class="choice-check" aria-hidden="true">
-        ${selected ? "✓" : ""}
-      </span>
+
       ${label}
     </button>`;
 
@@ -77,14 +75,23 @@ window.MiouraOnboarding = (() => {
       </div>
     </div>`;
 
-  const navigation = (nextLabel = "Verder") => `
-    <div class="onboarding-navigation">
-      <button type="button" class="btn ghost" id="on-back"
-        ${step === 1 ? "disabled" : ""}>Terug</button>
-      <button type="button" class="btn full" id="on-next">
-        ${nextLabel}
-      </button>
-    </div>`;
+  const navigation = (nextLabel = "Volgende stap") => `
+      <div class="onboarding-navigation">
+        <button type="button" class="btn ghost" id="on-back"
+          ${step === 1 ? "disabled" : ""}>Terug</button>
+
+        <button type="button" class="btn full" id="on-next">
+          <span>${nextLabel}</span>
+          <svg xmlns="http://www.w3.org/2000/svg"
+            width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-arrow-right">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </button>
+      </div>`;
 
   const page = (content, nextLabel) => {
     const view = $("view");
@@ -169,17 +176,15 @@ window.MiouraOnboarding = (() => {
 
     if (step === 1) {
       page(`
-        <section class="hero onboarding-hero">
-          <div class="mioura-mark">M</div>
+        <section class="hero">
           <span class="eyebrow">Welkom bij Mioura</span>
-          <h1>Een beetje meer inzicht, op jouw tempo.</h1>
-          <p>Welkom bij Mioura. Laten we jouw persoonlijke migrainedagboek instellen.</p>
-          <p>Houd migraine, symptomen en medicatie bij en ontdek patronen in je eigen tempo.</p>
+          <h1>Een beetje meer inzicht</h1>
+          <p>Laten we jouw persoonlijke migrainedagboek instellen.</p>
         </section>
         <section class="card">
           <h2 class="page-title">Hoe mogen we je noemen?</h2>
           <p class="subtitle">Je naam gebruiken we alleen voor een persoonlijke begroeting.</p>
-          ${field("Naam (optioneel)", "on-name", draft.name, "Bijvoorbeeld Sam")}
+          ${field("", "on-name", draft.name, "Bijvoorbeeld Sam")}
         </section>
       `);
       $("on-name").oninput = (e) => (draft.name = e.target.value);
@@ -194,8 +199,8 @@ window.MiouraOnboarding = (() => {
           <p class="subtitle">Je kunt dit later altijd aanpassen.</p>
           ${choices(
             "Gebruik je dagelijkse preventieve medicatie?",
-            "Ja, ik gebruik dagelijkse medicatie",
-            "Nee, momenteel niet",
+            "Ja",
+            "Nee",
             draft.daily,
           )}
           ${
@@ -238,8 +243,8 @@ window.MiouraOnboarding = (() => {
           <p class="subtitle">Voeg alleen medicijnen toe die je zelf gebruikt. Je kunt dit ook later doen.</p>
           ${choices(
             "Gebruik je extra medicatie?",
-            "Ja, ik gebruik extra medicatie",
-            "Nee, nog niet",
+            "Ja",
+            "Nee",
             draft.extraChoice,
           )}
           ${

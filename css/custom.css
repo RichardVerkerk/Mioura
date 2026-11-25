@@ -138,7 +138,9 @@ body {
     margin: 4px 0 18px;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
 }
+
 .hero:after {
     content: "";
     position: absolute;
@@ -148,7 +150,15 @@ body {
     background: rgba(255, 255, 255, 0.28);
     right: -55px;
     top: -55px;
+    z-index: -1;
 }
+
+.hero h1,
+.hero p {
+    position: relative;
+    z-index: 1;
+}
+
 .hero h1 {
     font:
         500 30px/1.15 "Playfair Display",
@@ -156,12 +166,47 @@ body {
     margin: 8px 0;
     color: var(--lilac7);
 }
+
 .hero p {
-    max-width: 270px;
+    max-width: 100%;
     color: #51465e;
     margin: 0 0 18px;
     line-height: 1.45;
 }
+.hero-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.quick-add-button {
+    position: fixed;
+    right: 10px;
+    bottom: calc(86px + env(safe-area-inset-bottom));
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 20px 20px;
+    border: none;
+    border-radius: 999px;
+
+    background: var(--coral);
+    color: #080808;
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+}
+
 .btn {
     border: 0;
     border-radius: 15px;
@@ -229,6 +274,68 @@ body {
 .dashboard-card-icon {
     color: var(--coral);
     font-size: 1.5em;
+}
+
+.onboarding-navigation {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+}
+
+.onboarding-navigation .btn {
+    flex: 1;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.onboarding-choices {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.onboarding-choice {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 18px;
+    border-radius: 999px;
+    border: none;
+    background: white;
+    color: var(--lilac7);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.onboarding-choice.selected {
+    background: var(--lilac7);
+    color: white;
+    font-weight: bold;
+}
+
+.choice-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.onboarding-choice.selected .choice-check {
+    border-color: white;
+    color: white;
 }
 
 .preview-icon {
