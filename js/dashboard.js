@@ -197,6 +197,7 @@ window.MiouraDashboard = {
   },
   bind() {
     this.updateIntakeButton();
+
     document
       .querySelectorAll("[data-go]")
       .forEach((b) => (b.onclick = () => renderPage(b.dataset.go)));

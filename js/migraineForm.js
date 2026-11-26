@@ -115,6 +115,54 @@ window.MiouraMigraineForm = {
     </div>
   `;
   },
+  quickForm() {
+    return `
+      <div class="migraine-quick-form">
+        <div class="field">
+          <label>Pijnintensiteit (0–10)</label>
+          <div class="range-row">
+            <input id="quick-pain" type="range" min="0" max="10" value="5">
+            <span class="pain-number" id="quick-pain-num">5</span>
+          </div>
+        </div>
+
+
+        <button class="btn full" id="save-quick-attack">
+          Aanval opslaan
+        </button>
+      </div>
+    `;
+  },
+  bindQuick(root) {
+    const pain = root.querySelector("#quick-pain");
+    const painNumber = root.querySelector("#quick-pain-num");
+
+    pain.oninput = () => {
+      painNumber.textContent = pain.value;
+    };
+
+    root.querySelector("#save-quick-attack").onclick = () => {
+      const date = today();
+      const time = nowTime();
+
+      const attack = MiouraData.addAttack({
+        date,
+        time,
+        endTime: "",
+        ongoing: true,
+        pain: Number(pain.value),
+        locations: [],
+        symptoms: [],
+        type: "",
+        notes: "",
+        updatedAt: new Date().toISOString(),
+      });
+
+      closeModal();
+      toast("Migraineaanval opgeslagen");
+      renderPage("dashboard");
+    };
+  },
   bind(a = {}, root = document.getElementById("view"), inModal = false) {
     let loc = [...(a.locations || [])],
       sym = [...(a.symptoms || [])];

@@ -109,10 +109,21 @@ document.addEventListener("click", (e) => {
 document.addEventListener("click", (e) => {
   const button = e.target.closest('[data-action="open-migraine-modal"]');
 
-  if (button) {
-    e.preventDefault();
-    openMigraineModal();
-  }
+  if (!button) return;
+
+  e.preventDefault();
+
+  modal(`
+    <div class="migraine-modal">
+      <div class="eyebrow">Snelle registratie</div>
+      <h2>Migraine registreren</h2>
+      <p>Vul voor nu de pijnintensiteit in, je kunt altijd later de registratie nog bewerken.</p>
+      ${MiouraMigraineForm.quickForm()}
+    </div>
+  `);
+
+  const root = document.querySelector(".migraine-modal");
+  MiouraMigraineForm.bindQuick(root);
 });
 document.addEventListener("DOMContentLoaded", () => {
   updateHeaderLock();

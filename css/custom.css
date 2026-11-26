@@ -921,6 +921,7 @@ body {
 .toggle:checked:before {
     left: 23px;
 }
+
 @media (min-width: 650px) {
     .app-shell {
         padding-bottom: 30px;
