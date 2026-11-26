@@ -849,6 +849,31 @@ body {
     font: 500 25px "Playfair Display";
     margin: 0 0 12px;
 }
+/* Alleen de migraine-registratiemodal */
+.modal:has(.migraine-modal) {
+    max-height: 75dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-sizing: border-box;
+}
+
+/* Inhoud van het formulier */
+.migraine-modal {
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+}
+.migraine-modal {
+    padding: 0;
+}
+
+.migraine-modal > h2 {
+    margin-bottom: 8px;
+}
+
+.migraine-modal > .subtitle {
+    margin-bottom: 20px;
+}
 .toast {
     position: fixed;
     bottom: 100px;

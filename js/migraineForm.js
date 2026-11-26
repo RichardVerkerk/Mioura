@@ -115,8 +115,7 @@ window.MiouraMigraineForm = {
     </div>
   `;
   },
-  bind(a = {}) {
-    const root = document.getElementById("view");
+  bind(a = {}, root = document.getElementById("view"), inModal = false) {
     let loc = [...(a.locations || [])],
       sym = [...(a.symptoms || [])];
     root.querySelectorAll("[data-loc]").forEach(
@@ -226,6 +225,9 @@ window.MiouraMigraineForm = {
       }
 
       toast("Migraineaanval opgeslagen");
+
+      if (inModal) closeModal();
+
       renderPage("dashboard");
     };
   },

@@ -41,9 +41,9 @@ window.MiouraAnalytics = {
     <div class="section-head">
       <h2>Aanvallen per maand</h2>
     </div>
-    <div class="card">
-      ${att.length ? '<canvas id="att-chart" height="190"></canvas>' : '<div class="empty">Registreer een aanval om hier je verloop te zien.</div>'}
-    </div>
+
+      ${att.length ? '<div class="card"><canvas id="att-chart" height="190"></canvas></div>' : '<div class="empty">Registreer een aanval om hier je verloop te zien.</div>'}
+
     <div class="section-head">
       <h2>Veel voorkomende symptomen</h2>
     </div>
@@ -67,7 +67,7 @@ window.MiouraAnalytics = {
       `,
               )
               .join("")
-          : `<div class="empty">Nog geen medicatie-innames geregistreerd.</div>`
+          : `<div class="empty">Nog onvoldoende gegevens.</div>`
       }
     <div class="section-head">
       <h2>Extra medicatie inname</h2>

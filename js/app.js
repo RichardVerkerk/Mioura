@@ -38,6 +38,23 @@ function modal(html) {
 function closeModal() {
   document.getElementById("modal-root").innerHTML = "";
 }
+function openMigraineModal(a = {}) {
+  modal(`
+    <div class="migraine-modal">
+      <div class="eyebrow">Jouw dagboek</div>
+      <h2>${a.id ? "Aanval aanpassen" : "Migraine registreren"}</h2>
+      <p class="subtitle">
+        Leg vast hoe je je voelt. Vul alleen in wat je wilt bijhouden.
+      </p>
+      <div id="migraine-modal-form">
+        ${MiouraMigraineForm.form(a)}
+      </div>
+    </div>
+  `);
+
+  const root = document.getElementById("migraine-modal-form");
+  MiouraMigraineForm.bind(a, root, true);
+}
 function renderPage(page = "dashboard", arg = null) {
   window.currentPage = page;
   document
@@ -87,6 +104,14 @@ document.addEventListener("click", (e) => {
   if (b) {
     e.preventDefault();
     renderPage(b.dataset.page);
+  }
+});
+document.addEventListener("click", (e) => {
+  const button = e.target.closest('[data-action="open-migraine-modal"]');
+
+  if (button) {
+    e.preventDefault();
+    openMigraineModal();
   }
 });
 document.addEventListener("DOMContentLoaded", () => {

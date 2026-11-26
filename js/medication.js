@@ -185,7 +185,7 @@ window.MiouraMedication = {
             `,
             )
             .join("")
-        : `<div class="empty">Nog geen medicatie-innames geregistreerd.</div>
+        : `<div class="empty"><strong>Nog geen recente innames</strong>Nog geen medicatie-innames geregistreerd.</div>
         `;
     })()}`;
   },
