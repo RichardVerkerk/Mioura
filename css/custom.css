@@ -596,7 +596,7 @@ body {
     border-radius: 50%;
     background: var(--coral);
     box-shadow: 0 1px 5px #00000025;
-    margin-top: -1px;
+    margin-top: -9px;
 }
 
 .range-row input[type="range"]::-moz-range-track {
