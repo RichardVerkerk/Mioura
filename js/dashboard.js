@@ -174,7 +174,7 @@ window.MiouraDashboard = {
     </div>
     `
         : `
-    <div class="card muted">Geen dagelijkse medicatie ingesteld.</div>`
+    <div class="empty">Geen dagelijkse medicatie ingesteld.</div>`
     }`;
   },
   updateIntakeButton() {
