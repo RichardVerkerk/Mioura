@@ -782,6 +782,19 @@ body {
 .cal-day.severe {
     background-color: var(--coral);
 }
+.cal-day {
+    position: relative;
+}
+
+.cal-day.has-medication::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--lilac7);
+}
 
 .cal-day.selected {
     border: 2px solid var(--lilac6);

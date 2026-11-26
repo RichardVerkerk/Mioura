@@ -26,8 +26,13 @@ window.MiouraCalendar = {
       } else dt = new Date(this.year, this.month, day);
       let iso = dt.toISOString().slice(0, 10),
         att = d.attacks.filter((a) => a.date === iso);
+      const hasMedication = (d.dailyMedicationLogs || []).some(
+        (m) => m.date === iso,
+      );
+      if (att.length) cls += " has-attack";
       if (att.length) cls += " has-attack";
       if (att.some((a) => a.pain >= 8)) cls += " severe";
+      if (hasMedication) cls += " has-medication";
       if (this.selected === iso) cls += " selected";
       cells += `<button class="cal-day ${cls}" data-day="${iso}">${dt.getDate()}</button>`;
     }
