@@ -290,6 +290,20 @@ body {
     margin-bottom: 12px;
 }
 
+.dashboard-register-button {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.55),
+        rgba(245, 238, 250, 0.35)
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-radius: 21px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+}
+
 .dashboard-stats-card {
     text-align: center;
 }
@@ -740,8 +754,9 @@ body {
 .bar {
     height: 9px;
     border-radius: 9px;
-    background: #f0eaf5;
+    background: var(--lilac2);
     overflow: hidden;
+    margin-top: 5px;
 }
 .bar span {
     display: block;

@@ -70,6 +70,11 @@ function renderPage(page = "dashboard", arg = null) {
     view.innerHTML = MiouraSettings.render();
     MiouraSettings.bind();
   }
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "instant",
+  });
 }
 
 document.addEventListener("click", (e) => {

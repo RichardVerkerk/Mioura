@@ -4,11 +4,43 @@ window.MiouraMedication = {
       daily = d.dailyMedication.current;
     return `
     <section class="hero">
-    <span class="eyebrow">Jouw behandeling</span>
-    <h1>Medicatie</h1>
-    <p>Houd je dagelijkse en zo nodig gebruikte medicatie overzichtelijk bij.</p>
+      <span class="eyebrow">Jouw behandeling</span>
+      <h1>Medicatie</h1>
+      <p>Houd je dagelijkse en zo nodig gebruikte medicatie overzichtelijk bij.</p>
     </section>
-    <div class="eyebrow"></div><h1 class="page-title"></h1><p class="subtitle"></p><div class="section-head"><h2>Dagelijkse medicatie</h2><button class="text-link" id="add-daily">＋ Toevoegen</button></div>${daily ? `<div class="card"><div class="row"><div><div class="item-title">${esc(daily.name)}</div><div class="muted">${esc(daily.dose || "Dosering niet ingevuld")}</div></div><span class="pill">Actief</span></div>${daily.activeIngredient ? `<p class="muted">Werkzame stof: ${esc(daily.activeIngredient)}</p>` : ""}<div class="row"><button class="text-link" id="edit-daily">Bewerken</button><button class="text-link" id="stop-daily">Stoppen</button></div></div>` : `<div class="empty"><strong>Nog geen dagelijkse medicatie</strong>Voeg je preventieve medicatie toe als je die gebruikt.</div>`}<div class="card">
+    <div class="section-head">
+      <h2>Dagelijkse medicatie</h2>
+      <button class="text-link" id="add-daily">＋ Toevoegen</button></div>
+      ${
+        daily
+          ? `
+    <div class="card">
+      <div class="row">
+        <div>
+        <div class="item-title">${esc(daily.name)}</div>
+        <div class="muted">${esc(daily.dose || "Dosering niet ingevuld")}</div>
+      </div>
+      <span class="pill">Actief</span>
+    </div>
+    ${
+      daily.activeIngredient
+        ? `
+    <p class="muted">Werkzame stof: ${esc(daily.activeIngredient)}</p>`
+        : ""
+    }
+    <div class="row">
+      <button class="text-link" id="edit-daily">Bewerken</button>
+      <button class="text-link" id="stop-daily">Stoppen</button>
+    </div>
+    </div>
+    `
+          : `
+    <div class="empty">
+      <strong>Nog geen dagelijkse medicatie</strong>Voeg je preventieve medicatie toe als je die gebruikt.
+    </div>
+    `
+      }
+    <div class="card">
       <div class="row">
         <div>
           <strong>Dagelijkse inname bijhouden</strong>

@@ -167,7 +167,7 @@ window.MiouraMigraineForm = {
             date: val.date,
             time: val.time,
             attackId: savedAttack.id,
-            effect: "Niet beoordeeld",
+            effect: "Inname geregistreerd",
           });
         }
       } else {

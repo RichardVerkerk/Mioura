@@ -23,10 +23,11 @@ window.MiouraDashboard = {
         ? `grid grid-dashboard-2`
         : ""
     }">
-      <div class="card dashboard-stats-card" style="display: flex">
-      <button class="btn coral hero-button" data-go="register" style="height:auto;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-lightning preview-icon"><path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/></svg>
-      Migraine registreren</button>
+      <div class="dashboard-register-button" style="display: flex">
+        <button class="btn coral hero-button" data-go="register" style="height:auto;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-lightning preview-icon"><path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973"/><path d="m13 12-3 5h4l-3 5"/></svg>
+          Migraine registreren
+        </button>
       </div>
 
       ${
@@ -37,10 +38,11 @@ window.MiouraDashboard = {
               );
 
               return `
-                <div class="card dashboard-stats-card">
+
                   ${
                     intakeToday
                       ? `
+                      <div class="card dashboard-stats-card">
                         <div class="medication-taken-message"  style="text-align: center;">
                           <div>
                             <strong>Medicijnen ingenomen</strong>
@@ -55,8 +57,10 @@ window.MiouraDashboard = {
                             </div>
                           </div>
                         </div>
+                        </div>
                       `
                       : `
+                      <div class="dashboard-register-button dashboard-stats-card">
                         <button class="btn lilac hero-button" id="open-daily-intake">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -75,9 +79,9 @@ window.MiouraDashboard = {
                           </svg>
                           <span id="daily-intake-label">Inname medicijnen</span>
                         </button>
+                        </div>
                       `
                   }
-                </div>
               `;
             })()
           : ""
@@ -209,8 +213,7 @@ window.MiouraDashboard = {
 
           if (button) {
             button.outerHTML = `
-              <div class="medication-taken-message">
-                <span>✓</span>
+              <div class="medication-taken-message" style="text-align: center;">
                 <div>
                   <strong>Medicijnen ingenomen</strong>
                   <div class="muted">
