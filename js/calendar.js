@@ -78,8 +78,16 @@ window.MiouraCalendar = {
     document.querySelectorAll("[data-day]").forEach(
       (b) =>
         (b.onclick = () => {
+          const scrollPosition = window.scrollY;
+
           this.selected = b.dataset.day;
           renderPage("calendar");
+
+          window.scrollTo({
+            top: scrollPosition,
+            left: 0,
+            behavior: "instant",
+          });
         }),
     );
     const attacks = MiouraStore.get().attacks.filter(
