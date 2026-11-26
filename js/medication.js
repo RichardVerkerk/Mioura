@@ -102,9 +102,34 @@ window.MiouraMedication = {
         `;
     })()}
     <div class="section-head"><h2>Extra medicatie</h2><button class="text-link" id="add-extra-med">＋ Toevoegen</button></div>
+    ${
+      d.extraMedications.length
+        ? d.extraMedications
+            .map(
+              (m) => `
+          <div
+            class="card row extra-med-card"
+            data-edit-extra-med="${m.id}"
+            role="button"
+            tabindex="0"
+          >
+            <div>
+              <div class="item-title">
+                ${esc(m.name)}
+                ${m.active === false ? '<span class="pill">Inactief</span>' : ""}
+              </div>
+              <div class="muted">
+                ${esc(m.dose || m.activeIngredient || "Geen details")}
+              </div>
+            </div>
+          </div>
+        `,
+            )
+            .join("")
+        : `<div class="empty"><strong>Nog geen extra medicatie</strong>Voeg medicatie toe die je zo nodig gebruikt.</div>`
+    }
+    <div class="section-head"><h2>Recente innames</h2></div>
 
-    ${d.extraMedications.length ? d.extraMedications.map((m) => `<div class="card row"><div><div class="item-title">${esc(m.name)} ${m.active === false ? '<span class="pill">Inactief</span>' : ""}</div><div class="muted">${esc(m.dose || m.activeIngredient || "Geen details")}</div></div><button class="text-link" data-logmed="${m.id}">Inname +</button></div>`).join("") : `<div class="empty"><strong>Nog geen extra medicatie</strong>Voeg medicatie toe die je zo nodig gebruikt.</div>`}<div class="section-head">
-      <h2>Recente innames</h2>
     </div>
     ${(() => {
       const dailyLogs = (d.dailyMedicationLogs || []).map((log) => ({
@@ -131,27 +156,37 @@ window.MiouraMedication = {
             .slice(0, 10)
             .map(
               (log) => `
-              <div class="card row">
-                <div>
-                  <strong>${esc(log.medicationName)}</strong>
-                  <div class="muted">
-                    ${esc(log.date)} · ${esc(log.time || "")}
-                    ${log.dose ? ` · ${esc(log.dose)}` : ""}
+              <div class="card medication-log-card">
+                <div class="medication-log-header">
+                  <div class="item-title">
+                    ${esc(log.medicationName)}
                   </div>
-                  <span class="pill">${log.type}</span>
+
+                  <button
+                    class="text-link"
+                    data-delete-log="${log.id}"
+                    data-log-type="${log.type}"
+                    aria-label="Inname verwijderen"
+                  >Verwijderen</button>
                 </div>
-                <span class="pill">${esc(log.effect || "Inname geregistreerd")}</span>
-                <button
-                  class="text-link"
-                  data-delete-log="${log.id}"
-                  data-log-type="${log.type}"
-                  aria-label="Inname verwijderen"
-                >Verwijderen</button>
+
+                <div class="medication-log-details">
+                  <span>${esc(log.date)}${log.time ? ` · ${esc(log.time)}` : ""}</span>
+                  <span>${log.dose ? esc(log.dose) : "Dosering onbekend"}</span>
+                </div>
+
+                <div class="medication-log-footer">
+                  <span class="medication-log-type pill">${esc(log.type)}</span>
+                  <span class="medication-log-effect pill">
+                    ${esc(log.effect || "Inname geregistreerd")}
+                  </span>
+                </div>
               </div>
             `,
             )
             .join("")
-        : `<div class="muted">Nog geen medicatie-innames geregistreerd.</div>`;
+        : `<div class="empty">Nog geen medicatie-innames geregistreerd.</div>
+        `;
     })()}`;
   },
   bind() {
@@ -183,6 +218,26 @@ window.MiouraMedication = {
       renderPage("medication");
     });
     document.getElementById("add-extra-med").onclick = () => extraModal();
+
+    document.querySelectorAll("[data-edit-extra-med]").forEach((card) => {
+      const editMedication = () => {
+        const id = card.dataset.editExtraMed;
+        const medication = MiouraStore.get().extraMedications.find(
+          (m) => m.id === id,
+        );
+
+        if (medication) extraModal(medication);
+      };
+
+      card.onclick = editMedication;
+
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          editMedication();
+        }
+      };
+    });
     document.querySelectorAll("[data-delete-log]").forEach((b) => {
       b.onclick = () => {
         const logId = b.dataset.deleteLog;
@@ -243,21 +298,128 @@ function dailyModal(m = {}) {
     renderPage("medication");
   };
 }
-function extraModal() {
-  modal(
-    `<h2>Extra medicatie toevoegen</h2><div class="field"><label>Naam</label><input id="em-name" placeholder="Bijvoorbeeld paracetamol"></div><div class="field"><label>Werkzame stof (optioneel)</label><input id="em-active"></div><div class="field"><label>Standaarddosering (optioneel)</label><input id="em-dose"></div><button class="btn full" id="em-save">Toevoegen</button>`,
-  );
+function extraModal(m = {}) {
+  const editing = !!m.id;
+
+  modal(`
+    <h2>${editing ? "Extra medicatie bewerken" : "Extra medicatie toevoegen"}</h2>
+
+    <div class="field">
+      <label>Naam</label>
+      <input id="em-name" value="${esc(m.name || "")}" placeholder="Bijvoorbeeld paracetamol">
+    </div>
+
+    <div class="field">
+      <label>Werkzame stof (optioneel)</label>
+      <input id="em-active" value="${esc(m.activeIngredient || "")}">
+    </div>
+
+    <div class="field">
+      <label>Standaarddosering (optioneel)</label>
+      <input id="em-dose" value="${esc(m.dose || "")}">
+    </div>
+
+    <div class="row" style="gap:10px">
+    <div>
+      <button class="btn full" id="em-save">
+        ${editing ? "Wijzigingen opslaan" : "Toevoegen"}
+      </button>
+      </div>
+
+      ${
+        editing
+          ? `<div><button
+              class="btn full"
+              id="em-delete"
+              type="button"
+              style="background:var(--coral); color:var(--lilac7)"
+            >Verwijderen</button></div>`
+          : ""
+      }
+    </div>
+  `);
+
   document.getElementById("em-save").onclick = () => {
-    let name = document.getElementById("em-name").value.trim();
+    const name = document.getElementById("em-name").value.trim();
+
     if (!name) return toast("Vul een naam in.");
-    MiouraData.addExtraMedication({
-      name,
-      activeIngredient: document.getElementById("em-active").value,
-      dose: document.getElementById("em-dose").value,
-    });
+
+    const data = MiouraStore.get();
+
+    if (editing) {
+      const medication = data.extraMedications.find((x) => x.id === m.id);
+
+      if (medication) {
+        medication.name = name;
+        medication.activeIngredient =
+          document.getElementById("em-active").value;
+        medication.dose = document.getElementById("em-dose").value;
+      }
+
+      // Werk ook de naam bij in bestaande innames
+      data.extraMedicationLogs.forEach((log) => {
+        if (log.medicationId === m.id) {
+          log.medicationName = name;
+        }
+      });
+
+      MiouraStore.save();
+    } else {
+      MiouraData.addExtraMedication({
+        name,
+        activeIngredient: document.getElementById("em-active").value,
+        dose: document.getElementById("em-dose").value,
+      });
+    }
+
     closeModal();
+    toast(editing ? "Medicatie aangepast" : "Medicatie toegevoegd");
     renderPage("medication");
   };
+
+  const deleteButton = document.getElementById("em-delete");
+
+  if (deleteButton) {
+    deleteButton.onclick = () => {
+      modal(`
+        <h2>Medicatie verwijderen?</h2>
+        <p class="muted">
+          Weet je zeker dat je ${esc(m.name)} wilt verwijderen?
+          De bestaande medicatie-innames blijven bewaard.
+        </p>
+
+        <div class="row" style="margin-top:20px">
+          <button class="btn" id="cancel-em-delete">
+            Annuleren
+          </button>
+          <button
+            class="btn full"
+            id="confirm-em-delete"
+            style="background:var(--coral); color:var(--lilac7)"
+          >
+            Verwijderen
+          </button>
+        </div>
+      `);
+
+      document.getElementById("cancel-em-delete").onclick = () => {
+        extraModal(m);
+      };
+
+      document.getElementById("confirm-em-delete").onclick = () => {
+        const data = MiouraStore.get();
+
+        data.extraMedications = data.extraMedications.filter(
+          (x) => x.id !== m.id,
+        );
+
+        MiouraStore.save();
+        closeModal();
+        toast("Medicatie verwijderd");
+        renderPage("medication");
+      };
+    };
+  }
 }
 function logExtra(id) {
   const m = MiouraStore.get().extraMedications.find((x) => x.id === id);

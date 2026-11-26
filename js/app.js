@@ -24,8 +24,13 @@ function toast(t) {
   setTimeout(() => el.remove(), 2300);
 }
 function modal(html) {
-  document.getElementById("modal-root").innerHTML =
-    `<div class="modal-backdrop" id="modal-back"><div class="modal">${html}<button class="btn ghost full" style="margin-top:10px" onclick="closeModal()">Sluiten</button></div></div>`;
+  document.getElementById("modal-root").innerHTML = `
+    <div class="modal-backdrop" id="modal-back">
+      <div class="modal">
+      ${html}
+      </div>
+    </div>
+    `;
   document.getElementById("modal-back").onclick = (e) => {
     if (e.target.id === "modal-back") closeModal();
   };

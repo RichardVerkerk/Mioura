@@ -33,11 +33,25 @@ window.MiouraCalendar = {
     }
     return `
     <section class="hero">
-    <span class="eyebrow">Jouw geschiedenis</span>
-    <h1>Kalender</h1>
-    <p>Bekijk je migraineaanvallen per dag.</p>
+      <span class="eyebrow">Jouw geschiedenis</span>
+      <h1>Kalender</h1>
+      <p>Bekijk je migraineaanvallen per dag.</p>
     </section>
-    <div class="card"><div class="row"><button class="text-link" id="prev-month">←</button><h2 style="font:500 21px 'Playfair Display'">${new Date(this.year, this.month, 1).toLocaleDateString("nl-NL", { month: "long", year: "numeric" })}</h2><button class="text-link" id="next-month">→</button></div><div class="calendar-grid">${["ma", "di", "wo", "do", "vr", "za", "zo"].map((x) => `<div class="cal-head">${x}</div>`).join("")}${cells}</div><div class="muted" style="margin-top:12px">Lila = aanval · Koraal = hoge pijnintensiteit</div></div><div id="day-detail"></div>`;
+    <div class="card">
+      <div class="row">
+        <button class="text-link" id="prev-month"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left preview-icon"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+        <h2 style="font:500 21px 'Playfair Display'">${new Date(this.year, this.month, 1).toLocaleDateString("nl-NL", { month: "long", year: "numeric" })}</h2>
+        <button class="text-link" id="next-month"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right preview-icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+    </div>
+    <div class="calendar-grid">
+      ${["ma", "di", "wo", "do", "vr", "za", "zo"].map((x) => `<div class="cal-head">${x}</div>`).join("")}${cells}
+    </div>
+    <div class="muted" style="margin-top:12px">
+      Lila = aanval · Koraal = hoge pijnintensiteit
+    </div>
+    </div>
+    <div id="day-detail">
+    </div>`;
   },
   bind() {
     document.getElementById("prev-month").onclick = () => {
@@ -66,11 +80,40 @@ window.MiouraCalendar = {
     const attacks = MiouraStore.get().attacks.filter(
       (a) => a.date === this.selected,
     );
-    document.getElementById("day-detail").innerHTML =
-      `<div class="section-head"><h2>${new Date(this.selected + "T12:00:00").toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })}</h2><button class="text-link" id="add-day-attack">＋ Aanval</button></div>${attacks.length ? attacks.map((a) => `<div class="card"><div class="row"><strong>${a.time} ${a.ongoing ? "· Lopend" : ""}</strong><span class="pill">Pijn ${a.pain}/10</span></div><p class="muted">${(a.symptoms || []).join(" · ") || "Geen symptomen ingevuld"}</p><div class="row"><button class="text-link" data-edit="${a.id}">Bewerken</button><button class="text-link" data-delete="${a.id}">Verwijderen</button></div></div>`).join("") : `<div class="empty"><strong>Geen aanvallen geregistreerd</strong>Er is voor deze dag nog niets bijgehouden.</div>`}`;
-    document.getElementById("add-day-attack").onclick = () => {
-      renderPage("register");
-    };
+    document.getElementById("day-detail").innerHTML = `
+      <div class="section-head">
+        <h2>${new Date(this.selected + "T12:00:00").toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })}</h2>
+        </div>
+        ${
+          attacks.length
+            ? attacks
+                .map(
+                  (a) => `
+          <div class="card row attack-card" data-edit-attack="${a.id}" role="button" tabindex="0">
+            <div class="row">
+              <strong>${a.time} ${a.ongoing ? "· Lopend" : ""}</strong>
+              <p class="muted">${(a.symptoms || []).join(" · ") || "Geen symptomen ingevuld"}</p>
+
+                <span class="pill ${
+                  a.pain <= 3
+                    ? "pain-low"
+                    : a.pain <= 7
+                      ? "pain-medium"
+                      : "pain-high"
+                }">
+                ${a.pain}/10
+                </span>
+                </div>
+              </div>
+          `,
+                )
+                .join("")
+            : `
+            <div class="empty">
+            <strong>Geen aanvallen geregistreerd</strong>Er is voor deze dag nog niets bijgehouden.
+        </div>
+        `
+        }`;
     document.querySelectorAll("[data-edit]").forEach(
       (b) =>
         (b.onclick = () => {
@@ -89,5 +132,22 @@ window.MiouraCalendar = {
           }
         }),
     );
+    document.querySelectorAll(".attack-card").forEach((card) => {
+      const editAttack = () => {
+        const id = card.dataset.editAttack;
+        const attack = MiouraStore.get().attacks.find((a) => a.id === id);
+
+        if (attack) renderPage("register", attack);
+      };
+
+      card.onclick = editAttack;
+
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          editAttack();
+        }
+      };
+    });
   },
 };

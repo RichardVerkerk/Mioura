@@ -117,7 +117,8 @@ window.MiouraDashboard = {
     <div class="section-head">
       <h2>Recente aanvallen</h2>
       <button class="text-link" data-go="calendar">Bekijk kalender <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right preview-icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
-    </div>${
+    </div>
+    ${
       att.length
         ? att
             .slice()
@@ -125,17 +126,52 @@ window.MiouraDashboard = {
             .slice(0, 3)
             .map(
               (a) =>
-                `<div class="card row"><div><div class="item-title">${new Date(a.date + "T12:00:00").toLocaleDateString("nl-NL", { day: "numeric", month: "long" })} · ${a.time}</div><div class="muted">${(a.symptoms || []).slice(0, 3).join(" · ") || "Geen symptomen ingevuld"}</div></div><span class="pill ${
-                  a.pain <= 3
-                    ? "pain-low"
-                    : a.pain <= 7
-                      ? "pain-medium"
-                      : "pain-high"
-                }">${a.pain}/10</span></div>`,
+                `
+                <div class="card row attack-card" data-edit-attack="${a.id}" role="button" tabindex="0">
+                  <div>
+                    <div class="item-title">
+                      ${new Date(a.date + "T12:00:00").toLocaleDateString("nl-NL", { day: "numeric", month: "long" })} · ${a.time}
+                    </div>
+                    <div class="muted">
+                    ${(a.symptoms || []).slice(0, 3).join(" · ") || "Geen symptomen ingevuld"}
+                    </div>
+                  </div>
+                  <span class="pill ${
+                    a.pain <= 3
+                      ? "pain-low"
+                      : a.pain <= 7
+                        ? "pain-medium"
+                        : "pain-high"
+                  }">
+                  ${a.pain}/10
+                  </span>
+                </div>`,
             )
             .join("")
-        : `<div class="empty"><strong>Je dagboek is nog leeg</strong>Zodra je een aanval registreert, verschijnt deze hier.</div>`
-    }<div class="section-head"><h2>Dagelijkse medicatie</h2><button class="text-link" data-go="medication">Beheren <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right preview-icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button></div>${d.dailyMedication.current ? `<div class="card row"><div><strong>${esc(d.dailyMedication.current.name)}</strong><div class="muted">${esc(d.dailyMedication.current.dose || "Dosering niet ingevuld")}</div></div><span class="pill">Actief</span></div>` : `<div class="card muted">Geen dagelijkse medicatie ingesteld.</div>`}`;
+        : `<div class="empty">
+        <strong>Je dagboek is nog leeg</strong>Zodra je een aanval registreert, verschijnt deze hier.
+        </div>`
+    }
+    <div class="section-head">
+      <h2>Dagelijkse medicatie</h2>
+      <button class="text-link" data-go="medication">Beheren <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right preview-icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+    ${
+      d.dailyMedication.current
+        ? `
+    <div class="card row">
+      <div>
+        <strong>${esc(d.dailyMedication.current.name)}</strong>
+        <div class="muted">${esc(d.dailyMedication.current.dose || "Dosering niet ingevuld")}
+        </div>
+      </div>
+      <span class="pill">Actief</span>
+    </div>
+    `
+        : `
+    <div class="card muted">Geen dagelijkse medicatie ingesteld.</div>`
+    }`;
   },
   updateIntakeButton() {
     const d = MiouraStore.get();
@@ -162,6 +198,24 @@ window.MiouraDashboard = {
       .forEach((b) => (b.onclick = () => renderPage(b.dataset.go)));
 
     const intakeButton = document.getElementById("open-daily-intake");
+
+    document.querySelectorAll(".attack-card").forEach((card) => {
+      const editAttack = () => {
+        const id = card.dataset.editAttack;
+        const attack = MiouraStore.get().attacks.find((a) => a.id === id);
+
+        if (attack) renderPage("register", attack);
+      };
+
+      card.onclick = editAttack;
+
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          editAttack();
+        }
+      };
+    });
 
     if (intakeButton) {
       intakeButton.onclick = () => {

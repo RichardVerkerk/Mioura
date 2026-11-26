@@ -97,7 +97,22 @@ window.MiouraMigraineForm = {
         >
       </div>
     </div>
-    <button class="btn full" id="save-attack">${editing ? "Wijzigingen opslaan" : "Aanval opslaan"}</button>
+    <div class="row" style="gap:10px">
+      <button class="btn full" id="save-attack">
+        ${editing ? "Wijzigingen opslaan" : "Aanval opslaan"}
+      </button>
+
+      ${
+        editing
+          ? `<button
+              class="btn full"
+              id="delete-attack"
+              type="button"
+              style="background:var(--coral); color:var(--lilac7)"
+            >Verwijderen</button>`
+          : ""
+      }
+    </div>
   `;
   },
   bind(a = {}) {
@@ -121,6 +136,42 @@ window.MiouraMigraineForm = {
     const pain = root.querySelector("#a-pain");
     pain.oninput = () =>
       (root.querySelector("#pain-num").textContent = pain.value);
+    const deleteButton = root.querySelector("#delete-attack");
+
+    if (deleteButton) {
+      deleteButton.onclick = () => {
+        modal(`
+          <h2>Migraineaanval verwijderen?</h2>
+          <p class="muted">
+            Weet je zeker dat je deze migraineaanval wilt verwijderen?
+            Dit kan niet ongedaan worden gemaakt.
+          </p>
+          <div class="row" style="margin-top:20px">
+            <button class="btn" id="cancel-delete-attack">
+              Annuleren
+            </button>
+            <button
+              class="btn full"
+              id="confirm-delete-attack"
+              style="background:var(--coral); color:var(--lilac7)"
+            >
+              Verwijderen
+            </button>
+          </div>
+        `);
+
+        document.getElementById("cancel-delete-attack").onclick = () => {
+          closeModal();
+        };
+
+        document.getElementById("confirm-delete-attack").onclick = () => {
+          MiouraData.deleteAttack(a.id);
+          closeModal();
+          toast("Migraineaanval verwijderd");
+          renderPage("dashboard");
+        };
+      };
+    }
     root.querySelector("#save-attack").onclick = () => {
       const val = {
         id: a.id,

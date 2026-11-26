@@ -47,12 +47,13 @@ window.MiouraAnalytics = {
     <div class="section-head">
       <h2>Veel voorkomende symptomen</h2>
     </div>
-    <div class="card">
+
       ${
         top.length
           ? top
               .map(
                 ([s, n]) => `
+                <div class="card">
         <div style="margin:13px 0">
           <div class="row">
           <span>${esc(s)}</span>
@@ -62,28 +63,27 @@ window.MiouraAnalytics = {
           <span style="width:${Math.max(8, (n / top[0][1]) * 100)}%"></span>
         </div>
       </div>
+      </div>
       `,
               )
               .join("")
-          : '< div class="muted" > Nog onvoldoende gegevens.</div > '
+          : `<div class="empty">Nog geen medicatie-innames geregistreerd.</div>`
       }
-    </div>
     <div class="section-head">
       <h2>Extra medicatie inname</h2>
     </div>
-    <div class="card">
+
       ${
         Object.keys(meds).length
           ? Object.entries(meds)
               .sort((a, b) => b[1] - a[1])
               .map(
                 ([m, n]) =>
-                  `<div class="row" style="padding:8px 0"><span>${esc(m)}</span><strong>${n}×</strong></div>`,
+                  `<div class="card"><div class="row" style="padding:8px 0"><span>${esc(m)}</span><strong>${n}×</strong></div></div>`,
               )
               .join("")
-          : '<div class="muted">Nog geen medicatie-innames geregistreerd.</div>'
+          : '<div class="empty">Nog geen medicatie-innames geregistreerd.</div>'
       }
-    </div>
     `;
   },
   bind() {

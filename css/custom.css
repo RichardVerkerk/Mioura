@@ -289,7 +289,56 @@ body {
     box-shadow: var(--shadow);
     margin-bottom: 12px;
 }
+.attack-card,
+.extra-med-card {
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
 
+.attack-card:active,
+.extra-med-card:active {
+    transform: scale(0.98);
+}
+
+.attack-card:focus-visible,
+.extra-med-card:focus-visible {
+    outline: 2px solid var(--lilac2);
+    outline-offset: 3px;
+}
+.medication-log-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.medication-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.medication-log-header .item-title {
+    min-width: 0;
+}
+
+.medication-log-header .text-link {
+    color: var(--coral);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.medication-log-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
 .dashboard-register-button {
     background: linear-gradient(
         135deg,
@@ -720,7 +769,7 @@ body {
     -webkit-tap-highlight-color: transparent;
 
     background-color: #fff;
-    color: var(--ink);
+    color: var(--lilac7);
     border-radius: 11px;
     cursor: pointer;
     border: 1px solid transparent;
@@ -735,7 +784,8 @@ body {
 }
 
 .cal-day.selected {
-    border: 2px solid var(--ink);
+    border: 2px solid var(--lilac6);
+    color: var(--lilac7);
     font-weight: 700;
 }
 
@@ -747,8 +797,8 @@ body {
 .cal-day:hover,
 .cal-day:focus,
 .cal-day:active {
-    color: var(--ink) !important;
-    -webkit-text-fill-color: var(--ink) !important;
+    color: var(--lilac7) !important;
+    -webkit-text-fill-color: var(--lilac7) !important;
     text-decoration: none;
 }
 .bar {
