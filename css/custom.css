@@ -502,12 +502,23 @@ body {
     border-color: var(--lilac2);
     box-shadow: 0 0 0 3px #e8d9ff70;
 }
+.field input,
+.field select,
+.field textarea {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+}
 .chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 .chip {
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+
     border: 1px solid #e7dfed;
     background: #fff;
     border-radius: 99px;
@@ -516,9 +527,18 @@ body {
     cursor: pointer;
 }
 .chip.selected {
-    background: var(--lilac);
-    border-color: var(--lilac2);
+    background: var(--coral);
+    /*border-color: var(--lilac2);*/
     font-weight: 700;
+}
+.chip,
+.chip:visited,
+.chip:hover,
+.chip:focus,
+.chip:active {
+    color: var(--ink) !important;
+    -webkit-text-fill-color: var(--ink) !important;
+    text-decoration: none;
 }
 .range-row {
     display: flex;

@@ -44,8 +44,15 @@ function renderPage(page = "dashboard", arg = null) {
     MiouraDashboard.bind();
   }
   if (page === "register") {
-    view.innerHTML = `<div class="eyebrow">Jouw dagboek</div><h1 class="page-title">${arg ? "Aanval aanpassen" : "Migraine registreren"}</h1><p class="subtitle">Leg vast hoe je je voelt. Vul alleen in wat je wilt bijhouden.</p>${MiouraMigraine.form(arg || {})}`;
-    MiouraMigraine.bind(arg || {});
+    view.innerHTML = `
+      <section class="hero">
+        <div class="eyebrow">Jouw dagboek</div>
+        <h1 class="page-title">${arg ? "Aanval aanpassen" : "Migraine registreren"}</h1>
+        <p class="subtitle">Leg vast hoe je je voelt. Vul alleen in wat je wilt bijhouden.</p>
+      </section>
+      ${MiouraMigraineForm.form(arg || {})}
+      `;
+    MiouraMigraineForm.bind(arg || {});
   }
   if (page === "calendar") {
     view.innerHTML = MiouraCalendar.render();
