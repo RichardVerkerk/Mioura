@@ -33,6 +33,8 @@ window.MiouraMigraineForm = {
         <input id="a-end" type="time" value="${a.endTime || ""}">
       </div>
       <label class="row">Is de aanval nog bezig? <input id="a-ongoing" class="toggle" type="checkbox" ${a.ongoing ? "checked" : ""}></label>
+    </div>
+    <div class="card">
       <div class="field">
         <label>Pijnintensiteit (0–10)</label>
         <div class="range-row">
@@ -51,16 +53,22 @@ window.MiouraMigraineForm = {
         <select id="a-type">
         <option value="">Niet ingevuld</option>${["Kloppend", "Stekend", "Drukkend", "Bonzend", "Anders"].map((x) => `<option ${a.type === x ? "selected" : ""}>${x}</option>`).join("")}</select>
       </div>
+    </div>
+    <div class="card">
       <div class="field">
         <label>Symptomen</label>
         <div class="chips">
           ${symptoms.map((x) => `<button type="button" class="chip ${selected.includes(x) ? "selected" : ""}" data-sym="${x}">${x}</button>`).join("")}
         </div>
       </div>
+    </div>
+    <div class="card">
       <div class="field">
         <label>Notities (optioneel)</label>
         <textarea id="a-notes" placeholder="Hoe voelde het?">${a.notes || ""}</textarea>
       </div>
+    </div>
+    <div class="card">
       <div class="field">
         <label>Extra medicatie ingenomen (optioneel)</label>
         <select id="a-med">
@@ -77,15 +85,16 @@ window.MiouraMigraineForm = {
             `,
           )
           .join("")}
-      </select>
-    </div>
-    <div class="field">
-      <label>Dosis (optioneel)</label>
-      <input
-        id="a-dose"
-        placeholder="Bijvoorbeeld 1 tablet"
-        value="${esc(existingMedication?.dose || "")}"
-      >
+        </select>
+        </div>
+      <div class="field">
+        <label>Dosis (optioneel)</label>
+        <input
+          id="a-dose"
+          placeholder="Bijvoorbeeld 1 tablet"
+          value="${esc(existingMedication?.dose || "")}"
+        >
+      </div>
     </div>
     <button class="btn full" id="save-attack">${editing ? "Wijzigingen opslaan" : "Aanval opslaan"}</button>
   `;

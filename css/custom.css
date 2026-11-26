@@ -478,8 +478,9 @@ body {
     display: block;
     font-size: 13px;
     font-weight: 700;
-    margin: 0 0 7px;
+    margin: 0 0 7px 0;
 }
+
 .field input,
 .field select,
 .field textarea {
@@ -508,6 +509,16 @@ body {
     box-sizing: border-box;
     max-width: 100%;
     min-width: 0;
+}
+.field input[type="date"],
+.field input[type="time"] {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
 }
 .chips {
     display: flex;
@@ -548,6 +559,72 @@ body {
 .range-row input {
     flex: 1;
     accent-color: var(--coral);
+}
+.range-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 48px;
+}
+
+.range-row input[type="range"] {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    accent-color: var(--coral);
+    cursor: pointer;
+    touch-action: pan-y;
+}
+
+.range-row input[type="range"]::-webkit-slider-runnable-track {
+    height: 15px;
+    margin: -1px;
+    background: #e8d9ff;
+    border: 5px solid var(--lilac1);
+    border-radius: 10px;
+}
+
+.range-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--coral);
+    box-shadow: 0 1px 5px #00000025;
+    margin-top: -1px;
+}
+
+.range-row input[type="range"]::-moz-range-track {
+    height: 8px;
+    background: #e8d9ff;
+    border-radius: 10px;
+}
+
+.range-row input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--coral);
+    border: 3px solid white;
+    box-shadow: 0 1px 5px #00000025;
+}
+
+.pain-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    /*background: var(--lilac);*/
+    font-size: 18px;
+    font-weight: 700;
 }
 .pain-number {
     font: 500 26px "Playfair Display";
