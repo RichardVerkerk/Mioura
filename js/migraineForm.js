@@ -16,6 +16,7 @@ window.MiouraMigraineForm = {
       "Duizeligheid",
       "Vermoeidheid",
       "Concentratieproblemen",
+      "Traan ogen",
     ];
     const selected = a.symptoms || [];
     return `
