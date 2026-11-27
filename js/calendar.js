@@ -52,7 +52,14 @@ window.MiouraCalendar = {
       if (att.some((a) => a.pain >= 8)) cls += " severe";
       if (hasMedication) cls += " has-medication";
       if (this.selected === iso) cls += " selected";
+      const now = new Date();
+      const todayISO = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0"),
+      ].join("-");
 
+      if (todayISO === iso) cls += " today";
       cells += `
         <button class="cal-day ${cls}" data-day="${iso}">
           ${dt.getDate()}
@@ -233,20 +240,20 @@ window.MiouraCalendar = {
             <div class="empty">
               <strong>Geen aanvallen geregistreerd</strong>
               Er is voor deze dag nog niets bijgehouden.
-              ${
-                attacks.length === 0
-                  ? `
-                    <button
-                      class="btn coral full"
-                      id="open-calendar-migraine"
-                      style="margin-top:16px;"
-                    >
-                      Migraineaanval registreren
-                    </button>
-                  `
-                  : ""
-              }
             </div>
+            ${
+              attacks.length === 0
+                ? `
+                  <button
+                    class="btn coral full"
+                    id="open-calendar-migraine"
+                    style=""
+                  >
+                    Migraineaanval registreren
+                  </button>
+                `
+                : ""
+            }
           `
       }
 
@@ -259,7 +266,14 @@ window.MiouraCalendar = {
           ? medicationLogs
               .map(
                 (log) => `
-                  <div class="card medication-log-card">
+                  <div
+                    class="card medication-log-card"
+                    ${
+                      log.type === "Extra"
+                        ? `data-edit-extra-log="${log.id}" role="button" tabindex="0"`
+                        : ""
+                    }
+                  >
                     <div class="medication-log-header">
                       <div class="item-title">
                         ${esc(log.medicationName || "Medicatie")}
@@ -302,24 +316,45 @@ window.MiouraCalendar = {
           : `
             <div class="empty">
               <strong>Geen innames geregistreerd</strong>
-              Er zijn voor deze dag geen medicatie-innames bijgehouden.
-              ${
+              Er zijn voor deze dag nog geen medicatie-innames bijgehouden.
+            </div>
+          `
+      }
+
+      ${
+        data.settings.trackDailyMedicationIntake &&
+        data.dailyMedication.current &&
+        !dailyLogs.some((log) => log.taken)
+          ? `
+            <button
+              class="btn lilac full"
+              id="open-calendar-daily-intake"
+              style=""
+            >
+              Medicijn inname registreren
+            </button>
+          `
+          : ""
+      }
+
+      ${
+        data.extraMedications?.some((m) => m.active !== false)
+          ? `
+            <button
+              class="btn full"
+              id="open-calendar-extra-intake"
+              style="${
                 data.settings.trackDailyMedicationIntake &&
                 data.dailyMedication.current &&
                 !dailyLogs.some((log) => log.taken)
-                  ? `
-                    <button
-                      class="btn lilac full"
-                      id="open-calendar-daily-intake"
-                      style="margin-top:16px"
-                    >
-                      Medicijn inname registreren
-                    </button>
-                  `
+                  ? "margin-top: 10px;"
                   : ""
-              }
-            </div>
+              }"
+            >
+              Extra medicatie registreren
+            </button>
           `
+          : ""
       }
     `;
     // Migraineaanval registreren voor geselecteerde datum
@@ -339,7 +374,11 @@ window.MiouraCalendar = {
 
         const root = document.querySelector(".migraine-modal");
 
-        MiouraMigraineForm.bind({ date: selectedDate }, root, true);
+        MiouraMigraineForm.bind(
+          { date: selectedDate, returnTo: "calendar" },
+          root,
+          true,
+        );
       };
     }
     // Dagelijkse medicatie registreren voor geselecteerde datum
@@ -403,7 +442,51 @@ window.MiouraCalendar = {
           };
       };
     }
+    const extraIntakeButton = document.getElementById(
+      "open-calendar-extra-intake",
+    );
 
+    extraIntakeButton?.addEventListener("click", () => {
+      const medications = MiouraStore.get().extraMedications.filter(
+        (m) => m.active !== false,
+      );
+
+      if (!medications.length) {
+        return toast("Voeg eerst extra medicatie toe.");
+      }
+
+      modal(`
+        <h2>Extra medicatie registreren</h2>
+        <p class="muted">Welke medicatie heb je ingenomen?</p>
+
+        <div class="field">
+          <label>Medicatie</label>
+          <select id="calendar-extra-medication">
+            ${medications
+              .map(
+                (m) => `
+                  <option value="${m.id}">${esc(m.name)}</option>
+                `,
+              )
+              .join("")}
+          </select>
+        </div>
+
+        <button class="btn full" id="calendar-extra-next">
+          Verder
+        </button>
+      `);
+
+      document.getElementById("calendar-extra-next").onclick = () => {
+        const id = document.getElementById("calendar-extra-medication").value;
+
+        closeModal();
+
+        setTimeout(() => {
+          logExtra(id, MiouraCalendar.selected);
+        }, 320);
+      };
+    });
     // Medicatie-innames verwijderen
     document
       .querySelectorAll("[data-calendar-delete-log]")
@@ -481,7 +564,38 @@ window.MiouraCalendar = {
         }
       };
     });
+    // Extra medicatie-innames bewerken
+    document.querySelectorAll("[data-edit-extra-log]").forEach((card) => {
+      const editExtraLog = () => {
+        const id = card.dataset.editExtraLog;
 
+        const log = MiouraStore.get().extraMedicationLogs.find(
+          (m) => m.id === id,
+        );
+
+        if (!log) return;
+
+        const medication = MiouraStore.get().extraMedications.find(
+          (m) => m.id === log.medicationId,
+        );
+
+        if (!medication) {
+          toast("Medicatie niet gevonden.");
+          return;
+        }
+
+        logExtra(log.medicationId, log.date, log);
+      };
+
+      card.onclick = editExtraLog;
+
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          editExtraLog();
+        }
+      };
+    });
     // Aanvalkaarten bewerken
     document.querySelectorAll(".attack-card").forEach((card) => {
       const editAttack = () => {

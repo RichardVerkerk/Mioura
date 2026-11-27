@@ -453,22 +453,101 @@ function extraModal(m = {}) {
     };
   }
 }
-function logExtra(id) {
-  const m = MiouraStore.get().extraMedications.find((x) => x.id === id);
-  modal(
-    `<h2>Inname registreren</h2><p>${esc(m.name)}</p><div class="field"><label>Dosis</label><input id="log-dose" value="${esc(m.dose || "")}" placeholder="Dosis"></div><div class="field"><label>Datum</label><input id="log-date" type="date" value="${today()}"></div><div class="field"><label>Tijd</label><input id="log-time" type="time" value="${nowTime()}"></div><div class="field"><label>Ervaren effect</label><select id="log-effect"><option>Niet beoordeeld</option><option>Geholpen</option><option>Gedeeltelijk geholpen</option><option>Niet geholpen</option></select></div><div class="field"><label>Bijwerkingen / notities</label><textarea id="log-notes"></textarea></div><button class="btn full" id="log-save">Inname opslaan</button>`,
-  );
+function logExtra(id, selectedDate = today(), existingLog = null) {
+  const data = MiouraStore.get();
+  const m = data.extraMedications.find((x) => x.id === id);
+
+  const medicationName = m?.name || existingLog?.medicationName || "Medicatie";
+
+  const editing = !!existingLog;
+
+  // Bij bewerken moet de bestaande registratie nog bestaan.
+  if (
+    editing &&
+    !data.extraMedicationLogs.some((log) => log.id === existingLog.id)
+  ) {
+    toast("Deze registratie is niet meer gevonden.");
+    return;
+  }
+
+  modal(`
+    <h2>${editing ? "Inname bewerken" : "Inname registreren"}</h2>
+    <p>${esc(medicationName)}</p>
+
+    <div class="field">
+      <label>Dosis</label>
+      <input
+        id="log-dose"
+        value="${esc(existingLog?.dose ?? m?.dose ?? "")}"
+        placeholder="Dosis"
+      >
+    </div>
+
+    <div class="field">
+      <label>Datum</label>
+      <input
+        id="log-date"
+        type="date"
+        value="${esc(existingLog?.date || selectedDate)}"
+      >
+    </div>
+
+    <div class="field">
+      <label>Tijd</label>
+      <input
+        id="log-time"
+        type="time"
+        value="${esc(existingLog?.time || nowTime())}"
+      >
+    </div>
+
+    <div class="field">
+      <label>Ervaren effect</label>
+      <select id="log-effect">
+        <option value="Niet beoordeeld">Niet beoordeeld</option>
+        <option value="Geholpen">Geholpen</option>
+        <option value="Gedeeltelijk geholpen">Gedeeltelijk geholpen</option>
+        <option value="Niet geholpen">Niet geholpen</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Bijwerkingen / notities</label>
+      <textarea id="log-notes">${esc(existingLog?.notes || "")}</textarea>
+    </div>
+
+    <button class="btn full" id="log-save">
+      ${editing ? "Wijzigingen opslaan" : "Inname opslaan"}
+    </button>
+  `);
+
+  // Bestaand effect selecteren
+  document.getElementById("log-effect").value =
+    existingLog?.effect || "Niet beoordeeld";
+
   document.getElementById("log-save").onclick = () => {
-    MiouraData.logExtraMedication({
+    const updatedLog = {
       medicationId: id,
-      medicationName: m.name,
+      medicationName,
       dose: document.getElementById("log-dose").value,
       date: document.getElementById("log-date").value,
       time: document.getElementById("log-time").value,
       effect: document.getElementById("log-effect").value,
       notes: document.getElementById("log-notes").value,
-    });
+    };
+
+    if (editing) {
+      const log = data.extraMedicationLogs.find((x) => x.id === existingLog.id);
+
+      Object.assign(log, updatedLog);
+      MiouraStore.save();
+    } else {
+      MiouraData.logExtraMedication(updatedLog);
+    }
+
     closeModal();
-    renderPage("medication");
+    toast(editing ? "Inname aangepast" : "Extra medicatie geregistreerd");
+
+    renderPage(window.currentPage === "calendar" ? "calendar" : "medication");
   };
 }

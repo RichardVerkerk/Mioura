@@ -275,7 +275,11 @@ window.MiouraMigraineForm = {
 
       if (inModal) closeModal();
 
-      renderPage("dashboard");
+      toast("Migraineaanval opgeslagen");
+
+      if (inModal) closeModal();
+
+      renderPage(a.returnTo || "dashboard");
     };
   },
 };

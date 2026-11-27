@@ -33,6 +33,21 @@ window.MiouraData = {
     d.extraMedicationLogs.push(l);
     MiouraStore.save();
   },
+  updateExtraMedicationLog(id, updatedLog) {
+    const d = MiouraStore.get();
+    const index = d.extraMedicationLogs.findIndex((x) => x.id === id);
+
+    if (index === -1) return false;
+
+    d.extraMedicationLogs[index] = {
+      ...d.extraMedicationLogs[index],
+      ...updatedLog,
+      id,
+    };
+
+    MiouraStore.save();
+    return true;
+  },
   setDailyMedication(m) {
     const d = MiouraStore.get();
     if (d.dailyMedication.current) {
