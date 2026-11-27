@@ -63,6 +63,9 @@ function openMigraineModal(a = {}) {
   MiouraMigraineForm.bind(a, root, true);
 }
 function renderPage(page = "dashboard", arg = null) {
+  const previousPage = window.currentPage;
+  const shouldAnimate = previousPage !== page;
+
   window.currentPage = page;
   document
     .querySelectorAll(".nav-item")
@@ -104,8 +107,28 @@ function renderPage(page = "dashboard", arg = null) {
     left: 0,
     behavior: "instant",
   });
-}
 
+  if (shouldAnimate) {
+    animatePage();
+  } else {
+    document
+      .getElementById("view")
+      .classList.remove("page-transition", "page-fade-in");
+  }
+}
+function animatePage() {
+  const view = document.getElementById("view");
+  if (!view) return;
+
+  view.classList.remove("page-fade-in");
+  view.classList.add("page-transition");
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      view.classList.add("page-fade-in");
+    });
+  });
+}
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-page]");
   if (b) {
