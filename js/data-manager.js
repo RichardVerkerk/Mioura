@@ -57,18 +57,26 @@ window.MiouraData = {
     }
     MiouraStore.save();
   },
-  logDailyMedication() {
+  logDailyMedication(date = today(), time = nowTime()) {
     const d = MiouraStore.get();
     const medication = d.dailyMedication.current;
 
     if (!medication) return false;
 
+    const alreadyTaken = d.dailyMedicationLogs.some(
+      (log) => log.date === date && log.taken,
+    );
+
+    if (alreadyTaken) return false;
+
     d.dailyMedicationLogs.push({
       id: MiouraStore.id(),
+      medicationId: medication.id,
       medicationName: medication.name,
+      activeIngredient: medication.activeIngredient || "",
       dose: medication.dose || "",
-      date: today(),
-      time: nowTime(),
+      date,
+      time,
       taken: true,
     });
 

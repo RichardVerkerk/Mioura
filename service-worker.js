@@ -1,4 +1,4 @@
-const CACHE = "mioura-v1.1.8";
+const CACHE = "mioura-v1.1.9";
 const CORE = [
   "./",
   "./index.html",

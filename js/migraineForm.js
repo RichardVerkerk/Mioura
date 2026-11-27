@@ -99,7 +99,7 @@ window.MiouraMigraineForm = {
     </div>
     <div class="row" style="gap:10px">
       <button class="btn full" id="save-attack">
-        ${editing ? "Wijzigingen opslaan" : "Aanval opslaan"}
+        ${editing ? "Opslaan" : "Aanval opslaan"}
       </button>
 
       ${
@@ -125,7 +125,6 @@ window.MiouraMigraineForm = {
             <span class="pain-number" id="quick-pain-num">5</span>
           </div>
         </div>
-
 
         <button class="btn full" id="save-quick-attack">
           Aanval opslaan

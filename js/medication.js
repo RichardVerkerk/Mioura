@@ -134,12 +134,10 @@ window.MiouraMedication = {
     ${(() => {
       const dailyLogs = (d.dailyMedicationLogs || []).map((log) => ({
         ...log,
-        medicationName:
-          d.dailyMedication.current?.name || "Dagelijkse medicatie",
+        medicationName: log.medicationName || "Dagelijkse medicatie",
         type: "Dagelijks",
         effect: "Inname geregistreerd",
       }));
-
       const extraLogs = (d.extraMedicationLogs || []).map((log) => ({
         ...log,
         type: "Extra",
@@ -196,10 +194,45 @@ window.MiouraMedication = {
       .getElementById("edit-daily")
       ?.addEventListener("click", () => dailyModal(d.dailyMedication.current));
     document.getElementById("stop-daily")?.addEventListener("click", () => {
-      if (confirm("Wil je deze dagelijkse medicatie stoppen?")) {
+      modal(`
+        <div class="eyebrow">Dagelijkse medicatie</div>
+        <h2>Medicatie stoppen?</h2>
+
+        <p class="muted">
+          Weet je zeker dat je ${esc(d.dailyMedication.current?.name || "deze medicatie")}
+          wilt stoppen?
+        </p>
+
+        <p class="muted">
+          De medicatie wordt verplaatst naar je eerdere medicatiehistorie.
+          Eerdere innames blijven bewaard.
+        </p>
+
+        <div class="row" style="gap:10px; margin-top:20px">
+          <button class="btn full" id="cancel-stop-daily">
+            Annuleren
+          </button>
+
+          <button
+            class="btn full"
+            id="confirm-stop-daily"
+            style="background:var(--coral); color:var(--lilac7)"
+          >
+            Medicatie stoppen
+          </button>
+        </div>
+      `);
+
+      document.getElementById("cancel-stop-daily").onclick = () => {
+        closeModal();
+      };
+
+      document.getElementById("confirm-stop-daily").onclick = () => {
         MiouraData.stopDailyMedication();
+        closeModal();
+        toast("Dagelijkse medicatie gestopt");
         renderPage("medication");
-      }
+      };
     });
     document.getElementById("track-toggle").onchange = (e) => {
       d.settings.trackDailyMedicationIntake = e.target.checked;
@@ -207,13 +240,12 @@ window.MiouraMedication = {
       renderPage("medication");
     };
     document.getElementById("log-daily")?.addEventListener("click", () => {
-      d.dailyMedicationLogs.push({
-        id: MiouraStore.id(),
-        date: today(),
-        time: nowTime(),
-        taken: true,
-      });
-      MiouraStore.save();
+      const success = MiouraData.logDailyMedication();
+
+      if (!success) {
+        return toast("Er is geen dagelijkse medicatie ingesteld.");
+      }
+
       toast("Inname geregistreerd");
       renderPage("medication");
     });
@@ -251,7 +283,7 @@ window.MiouraMedication = {
           </p>
           <div class="row" style="margin-top:20px">
             <button class="btn" id="cancel-delete-log">Annuleren</button>
-            <button class="btn full" id="confirm-delete-log">Verwijderen</button>
+            <button class="btn full coral" id="confirm-delete-log">Verwijderen</button>
           </div>
         `);
 
@@ -322,7 +354,7 @@ function extraModal(m = {}) {
     <div class="row" style="gap:10px">
     <div>
       <button class="btn full" id="em-save">
-        ${editing ? "Wijzigingen opslaan" : "Toevoegen"}
+        ${editing ? "Opslaan" : "Opslaan"}
       </button>
       </div>
 

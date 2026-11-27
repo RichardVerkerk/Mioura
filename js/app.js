@@ -36,7 +36,14 @@ function modal(html) {
   };
 }
 function closeModal() {
-  document.getElementById("modal-root").innerHTML = "";
+  const backdrop = document.getElementById("modal-back");
+  if (!backdrop) return;
+
+  backdrop.classList.add("modal-closing");
+
+  setTimeout(() => {
+    document.getElementById("modal-root").innerHTML = "";
+  }, 300);
 }
 function openMigraineModal(a = {}) {
   modal(`

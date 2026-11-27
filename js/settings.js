@@ -27,7 +27,7 @@ window.MiouraSettings = {
       </div>
       <div class="card">
         <strong>Mioura</strong>
-        <div class="muted">Persoonlijk migrainejournaal · versie 1.1.8</div>
+        <div class="muted">Persoonlijk migrainejournaal · versie 1.1.9</div>
       </div>`;
   },
 
