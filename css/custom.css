@@ -913,15 +913,22 @@ body {
 .toggle {
     width: 46px;
     height: 26px;
+    min-width: 46px;
     appearance: none;
+    -webkit-appearance: none;
     background: var(--lilac4);
     border-radius: 99px;
     position: relative;
     cursor: pointer;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    margin: 0;
 }
+
 .toggle:checked {
     background: var(--coral);
 }
+
 .toggle:before {
     content: "";
     position: absolute;
@@ -931,8 +938,10 @@ body {
     border-radius: 50%;
     left: 3px;
     top: 3px;
-    transition: 0.15s;
+    transition: left 0.2s ease;
+    box-sizing: border-box;
 }
+
 .toggle:checked:before {
     left: 23px;
 }
